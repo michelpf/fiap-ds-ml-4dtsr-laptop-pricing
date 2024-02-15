@@ -1,4 +1,4 @@
 [core]
-    remote = aws
-['remote "aws"']
-    url = s3://mlops-aula/dvc
+    remote = aws-remote
+['remote "aws-remote"']
+    url = s3://fiap-mlops-4dtsr/dvc-files
