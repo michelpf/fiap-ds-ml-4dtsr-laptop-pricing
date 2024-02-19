@@ -11,8 +11,9 @@ from dotenv import find_dotenv, load_dotenv
 @click.argument('s3_object')
 @click.argument('output_filepath', type=click.Path())
 def main(s3_bucket, s3_object, output_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
+    """ Obter dados originais diretamente do bucket do datalake.
+        Parâmetros de entrada: dados do bucket e arquivo.
+        Parâmetro de saída: local para armazenar arquivo baixado.
     """
     
     logger = logging.getLogger(__name__)
@@ -22,8 +23,8 @@ def main(s3_bucket, s3_object, output_filepath):
 
     s3.download_file(s3_bucket, s3_object, output_filepath)
 
-    logger.info('Data download successfully.')
-    logger.info('Process finished.')
+    logger.info('Dados baixados com suceso.')
+    logger.info('Processo terminado.')
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
