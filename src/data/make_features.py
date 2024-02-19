@@ -12,7 +12,7 @@ from dotenv import find_dotenv, load_dotenv
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
 def main(input_filepath, output_filepath):
-    """ Realiza a transformação dos dados em features, com mapeamentos 
+    """ Realiza a transformação dos dados em features, com mapeamentos .
         específicos, como por exemplo, one-hot-enconding.
         Parâmetro de entrada recebe o conjunto de dados pré-procesado.
         Parâmetro de saída é o resultado do novo arquivo preparado como features a ser treinado.
