@@ -12,22 +12,23 @@ from dotenv import find_dotenv, load_dotenv
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
 def main(input_filepath, output_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
+    """ Realiza o pré-processamento dos dados originais.
+        Parâmetro de entrada recebe o data frame original.
+        Parâmetro de saída envia o data set pré-processado.
     """
     
     logger = logging.getLogger(__name__)
-    logger.info('Starting the analysis of original raw data.')
+    logger.info('Iniciando análise dos dados originais (raw).')
 
     df = pd.read_csv(input_filepath)
 
-    logger.info('Converting in lower cases the attribute fields.')
+    logger.info('Convertendo os dados em caixa baixa.')
 
 
     df_transformed = df.copy()
     df_transformed = df_transformed.astype(str).apply(lambda x: x.str.lower())
 
-    logger.info('Drop unecessary fields.')
+    logger.info('Remoção de campos não necessários.')
 
     df_transformed.drop("rating", axis=1, inplace=True)
     df_transformed.drop("Number of Ratings", axis=1, inplace=True)
@@ -35,7 +36,7 @@ def main(input_filepath, output_filepath):
     df_transformed.drop("msoffice", axis=1, inplace=True)
     df_transformed.drop("processor_gnrtn", axis=1, inplace=True)
 
-    logger.info('Replacing values to match what is expected from model and user interaction.')
+    logger.info('Removendo caracteres para transformar em atributos numéricos.')
 
     df_transformed['ram_gb'] = df_transformed['ram_gb'].replace({' gb' : ''}, regex=True)
     df_transformed['ssd'] = df_transformed['ssd'].replace({' gb' : ''}, regex=True)
@@ -46,11 +47,11 @@ def main(input_filepath, output_filepath):
     df_transformed['Touchscreen'] = df_transformed['Touchscreen'].replace({'no' : '0'}, regex=True)
     df_transformed['Touchscreen'] = df_transformed['Touchscreen'].replace({'yes' : '1'}, regex=True)
 
-    logger.info('Column rename to ensure standarization.')
+    logger.info('Renomear coluna para padronização.')
 
     df_transformed = df_transformed.rename(columns={"Touchscreen": "touchscreen","Price": "price"})
 
-    logger.info('Conversion of field types to specific ones.')
+    logger.info('Conversão de tipos de dados para cada feature.')
 
     df_transformed['ram_gb'] = pd.to_numeric(df_transformed['ram_gb'], errors='coerce').fillna(0).astype(np.int64)
     df_transformed['hdd'] = pd.to_numeric(df_transformed['hdd'], errors='coerce').fillna(0).astype(np.int64)
@@ -61,7 +62,7 @@ def main(input_filepath, output_filepath):
     df_transformed['touchscreen'] = pd.to_numeric(df_transformed['touchscreen'], errors='coerce').fillna(0).astype(np.int64)
     df_transformed['price'] = pd.to_numeric(df_transformed['price'], errors='coerce').fillna(0).astype(np.int64)
 
-    logger.info('Adjusting balance of values.')
+    logger.info('Ajustando balanço de tipos de dados.')
 
     replace_dict = {'mac': 'other', 'dos': 'other'}
     df_transformed['os'].replace(replace_dict, inplace=True)
@@ -75,15 +76,15 @@ def main(input_filepath, output_filepath):
     replace_dict = {'acer': 'other', 'msi': 'other', 'apple': 'other','avita':'other'}
     df_transformed['brand'].replace(replace_dict, inplace=True)
 
-    logger.info('Drop of duplicates')
+    logger.info('Remoção de duplicados.')
 
     df_transformed.drop_duplicates(inplace=True)
 
-    logger.info('Export to csv file.')
+    logger.info('Exportação para arquivo CSV.')
 
     df_transformed.to_csv(output_filepath, index=False)
 
-    logger.info('Process finished.')
+    logger.info('Processo terminado.')
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

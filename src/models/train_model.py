@@ -19,12 +19,12 @@ import matplotlib.pyplot as plt
 @click.argument('input_filepath', type=click.Path(exists=True))
 @click.argument('output_filepath', type=click.Path())
 def main(input_filepath, output_filepath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
+    """ Executa o treinamento na pasta de entrada fornecida
+        e armazena em formato serializado na pasta de saída.
     """
 
     logger = logging.getLogger(__name__)
-    logger.info('Load the processed data.')
+    logger.info('Carregar arquivo de features.')
     
     df = pd.read_csv(input_filepath)
     
@@ -38,14 +38,14 @@ def main(input_filepath, output_filepath):
     X = df[features]
     y = df["price"]
 
-    logger.info('Split the data for training and testing')
+    logger.info('Dividindo dados de teste e de treino.')
 
     X_train, X_test, y_train, y_test = train_test_split(X.values, y.values, test_size=0.3, random_state=42)
 
-    logger.info('Model is based on Linear regression.')
+    logger.info('Modelo baseado em regressão linear.')
     model = Ridge()
 
-    logger.info('Starting model training.')
+    logger.info('Iniciando treinamento do modelo.')
     model.fit(X_train, y_train)
 
     predictions = model.predict(X_test)
@@ -57,12 +57,12 @@ def main(input_filepath, output_filepath):
     logger.info('Mean Absolute Error: ' + str(mae))
     logger.info('R2: ' + str(r2))
 
-    logger.info('Saving figure of results.')
+    logger.info('Salvando modelo.')
 
-    logger.info('Model serialization.')
+    logger.info('Serialização do modelo.')
     joblib.dump(model, output_filepath)
 
-    logger.info('Process finished.')
+    logger.info('Processo terminado.')
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
