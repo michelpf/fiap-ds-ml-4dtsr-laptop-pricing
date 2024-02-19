@@ -1,0 +1,63 @@
+schema: '2.0'
+stages:
+  obter_dados:
+    cmd: python -m src.data.get_data fiap-ds-mlops dataset/laptopPrice.csv data/raw/laptopPrice.csv
+    deps:
+    - path: src/data/get_data.py
+      hash: md5
+      md5: 885ab907920943b5b5d17854b3e2fcbe
+      size: 1223
+    outs:
+    - path: data/raw/laptopPrice.csv
+      hash: md5
+      md5: d24a79d72406369abae616bafc2545eb
+      size: 93007
+  processar_dataset:
+    cmd: python -m src.data.make_dataset data/raw/laptopPrice.csv data/processed/laptop-pricing.csv
+    deps:
+    - path: data/raw/laptopPrice.csv
+      hash: md5
+      md5: d24a79d72406369abae616bafc2545eb
+      size: 93007
+    - path: src/data/make_dataset.py
+      hash: md5
+      md5: 85c58d732ba749acca06ee74d3f05e86
+      size: 4655
+    outs:
+    - path: data/processed/laptop-pricing.csv
+      hash: md5
+      md5: 046d448000371d297fd47ef7a03da2dd
+      size: 53020
+  processar_features:
+    cmd: python -m src.data.make_features data/processed/laptop-pricing.csv data/processed/laptop-pricing-features.csv
+    deps:
+    - path: data/processed/laptop-pricing.csv
+      hash: md5
+      md5: 046d448000371d297fd47ef7a03da2dd
+      size: 53020
+    - path: src/data/make_features.py
+      hash: md5
+      md5: 3b6fed7adcfddfd1d8b6be7a3ea93c55
+      size: 2339
+    outs:
+    - path: data/processed/laptop-pricing-features.csv
+      hash: md5
+      md5: 8eda70061bca1b2ba318d4981f55f359
+      size: 54335
+  treinamento:
+    cmd: python -m src.models.train_model data/processed/laptop-pricing-features.csv
+      models/model.pkl
+    deps:
+    - path: data/processed/laptop-pricing-features.csv
+      hash: md5
+      md5: 8eda70061bca1b2ba318d4981f55f359
+      size: 54335
+    - path: src/models/train_model.py
+      hash: md5
+      md5: 716718270fa06dd92bffe8bcd5f38c68
+      size: 2302
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: c1b3e244478122edccffd2cca677e3ff
+      size: 771
