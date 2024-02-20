@@ -34,12 +34,10 @@ stages:
 artifacts:
   laptop-pricing:
     path: models/model.pkl
-    desc: Modelo para predição de preços de laptops (Rupees indiano, RPI)
     type: model
+    desc: Model to predict laptop pricing.
     labels:
     - regression
-    - pricing
-    - laptop
 
 metrics:
 - dvclive/metrics.json
@@ -47,3 +45,5 @@ metrics:
 plots:
 - dvclive/plots/metrics:
     x: step
+
+- reports/figures/true_vs_predicted.png

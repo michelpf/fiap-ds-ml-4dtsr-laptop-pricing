@@ -1,4 +1,5 @@
 [core]
     remote = aws-remote
+    autostage = true
 ['remote "aws-remote"']
     url = s3://fiap-mlops-4dtsr/dvc-files
